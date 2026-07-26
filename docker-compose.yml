@@ -1,0 +1,18 @@
+services:
+  reviewer:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # Inside the container the key file is mounted at /srv/app/secrets
+      GITHUB_PRIVATE_KEY_PATH: /srv/app/secrets/github-app.private-key.pem
+      STATE_DB_PATH: /srv/app/data/review_state.db
+    volumes:
+      - ./github-app.private-key.pem:/srv/app/secrets/github-app.private-key.pem:ro
+      - review-state:/srv/app/data
+    restart: unless-stopped
+
+volumes:
+  review-state:
