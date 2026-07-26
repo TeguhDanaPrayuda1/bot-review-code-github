@@ -184,7 +184,7 @@ LLM_BASE_URL=https://api.gateway-anda.tld
 ```
 
 **2. `openai_compatible`** — gateway/agregator apa pun dengan endpoint
-`/v1/chat/completions` dan auth `Authorization: Bearer` (mis. openagentic.id,
+`/chat/completions` dan auth `Authorization: Bearer` (mis. openagentic.id,
 OpenRouter, server inference lokal):
 
 ```env
@@ -192,6 +192,23 @@ LLM_PROVIDER=openai_compatible
 LLM_API_KEY=<api key dari gateway>
 LLM_BASE_URL=https://api.gateway-anda.tld/v1
 LLM_MODEL=<nama model sesuai daftar gateway>
+```
+
+Contoh untuk openagentic.id:
+
+```env
+LLM_PROVIDER=openai_compatible
+LLM_API_KEY=sk-...
+LLM_BASE_URL=https://openagentic.id/api/v1
+LLM_MODEL=mimo-v2.5-pro
+```
+
+Uji konfigurasi sebelum menghubungkan bot ke GitHub — script berikut mengirim
+satu diff contoh (berisi SQL injection, hardcoded secret, dan bare `except`)
+dan menampilkan temuan yang berhasil diparse:
+
+```bash
+python scripts/check_llm.py
 ```
 
 Catatan: pada provider `openai_compatible`, output JSON tidak dipaksa lewat
