@@ -26,8 +26,15 @@ class Settings(BaseSettings):
     github_api_url: str = "https://api.github.com"
 
     # --- LLM ---
+    # "anthropic" (default) or "openai_compatible" (any /chat/completions gateway)
     llm_provider: str = "anthropic"
     anthropic_api_key: str = ""
+    # Generic API key for non-Anthropic providers (falls back to anthropic_api_key).
+    llm_api_key: str = ""
+    # Custom endpoint. For "anthropic": an Anthropic-compatible base URL
+    # (default: https://api.anthropic.com). For "openai_compatible": required,
+    # e.g. https://api.gateway.example/v1
+    llm_base_url: str = ""
     llm_model: str = "claude-opus-5"
     llm_max_tokens: int = 8192
     llm_timeout_seconds: float = 300.0

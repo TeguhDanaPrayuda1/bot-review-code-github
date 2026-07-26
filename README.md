@@ -171,9 +171,39 @@ pemfilteran file (skip pattern, truncation, chunking).
 
 ## Mengganti provider LLM
 
-Implementasikan subclass `LLMProvider` di `app/llm/`, daftarkan di
-`create_provider()` (`app/llm/base.py`), lalu set `LLM_PROVIDER=<nama>`.
-Interface-nya hanya satu method: `complete(system, user, json_schema) -> str`.
+Dua provider tersedia bawaan:
+
+**1. `anthropic`** (default) — Anthropic Claude langsung, atau gateway yang
+Anthropic-compatible (endpoint `/v1/messages`):
+
+```env
+LLM_PROVIDER=anthropic
+ANTHROPIC_API_KEY=<api key>
+# opsional, untuk gateway Anthropic-compatible:
+LLM_BASE_URL=https://api.gateway-anda.tld
+```
+
+**2. `openai_compatible`** — gateway/agregator apa pun dengan endpoint
+`/v1/chat/completions` dan auth `Authorization: Bearer` (mis. openagentic.id,
+OpenRouter, server inference lokal):
+
+```env
+LLM_PROVIDER=openai_compatible
+LLM_API_KEY=<api key dari gateway>
+LLM_BASE_URL=https://api.gateway-anda.tld/v1
+LLM_MODEL=<nama model sesuai daftar gateway>
+```
+
+Catatan: pada provider `openai_compatible`, output JSON tidak dipaksa lewat
+schema di sisi API (banyak gateway tidak mendukungnya) — prompt sudah meminta
+JSON-only dan parser di engine bersifat lenient, jadi tetap berfungsi; model
+yang lemah mengikuti instruksi bisa sesekali menghasilkan output yang gagal
+diparse (chunk dilewati dan dicatat di ringkasan).
+
+Untuk provider lain, implementasikan subclass `LLMProvider` di `app/llm/`,
+daftarkan di `create_provider()` (`app/llm/base.py`), lalu set
+`LLM_PROVIDER=<nama>`. Interface-nya hanya satu method:
+`complete(system, user, json_schema) -> str`.
 
 ## Asumsi yang diambil
 

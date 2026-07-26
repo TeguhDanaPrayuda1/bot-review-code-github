@@ -45,8 +45,20 @@ def create_provider(settings: Any) -> LLMProvider:
         from app.llm.anthropic_provider import AnthropicProvider
 
         return AnthropicProvider(
-            api_key=settings.anthropic_api_key,
+            api_key=settings.anthropic_api_key or settings.llm_api_key,
             model=settings.llm_model,
+            base_url=settings.llm_base_url or None,
+            max_tokens=settings.llm_max_tokens,
+            timeout=settings.llm_timeout_seconds,
+            max_retries=settings.llm_max_retries,
+        )
+    if name == "openai_compatible":
+        from app.llm.openai_compatible_provider import OpenAICompatibleProvider
+
+        return OpenAICompatibleProvider(
+            api_key=settings.llm_api_key or settings.anthropic_api_key,
+            model=settings.llm_model,
+            base_url=settings.llm_base_url,
             max_tokens=settings.llm_max_tokens,
             timeout=settings.llm_timeout_seconds,
             max_retries=settings.llm_max_retries,

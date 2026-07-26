@@ -27,9 +27,11 @@ class AnthropicProvider(LLMProvider):
         max_tokens: int,
         timeout: float,
         max_retries: int,
+        base_url: str | None = None,
     ) -> None:
         self._client = anthropic.AsyncAnthropic(
             api_key=api_key or None,  # None -> resolve from environment
+            base_url=base_url,  # None -> https://api.anthropic.com
             timeout=timeout,
             max_retries=max_retries,
         )
